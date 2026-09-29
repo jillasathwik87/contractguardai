@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 10000
 
+ENV RENDER_API=1
 CMD ["sh", "-c", "uvicorn api:api --host 0.0.0.0 --port ${PORT:-10000}"]

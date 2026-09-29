@@ -6,6 +6,9 @@ from pathlib import Path
 
 import gradio as gr
 
+if os.getenv("RENDER_API") != "1":
+    import gradio as gr
+
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_chroma import Chroma
@@ -1153,20 +1156,21 @@ Contract retrieval
 # ============================================================
 # GRADIO UI
 # ============================================================
+if os.getenv("RENDER_API") != "1":
+    DISCLAIMER = """
+    ⚠️ **DISCLAIMER:** This application is for educational and
+    demonstration purposes only. It is not a substitute for review
+    by a licensed lawyer or qualified legal professional.
+    """
 
-DISCLAIMER = """
-⚠️ **DISCLAIMER:** This application is for educational and
-demonstration purposes only. It is not a substitute for review
-by a licensed lawyer or qualified legal professional.
-"""
+if os.getenv("RENDER_API") != "1":
 
+    with gr.Blocks(
+        title="Contract Compliance Agent"
+    )as demo:
 
-with gr.Blocks(
-    title="Contract Compliance Agent"
-) as demo:
-
-    gr.Markdown(
-        """
+        gr.Markdown(
+            """
 # 📄 Contract Compliance Agent
 
 Upload a contract and the agent will **automatically**:
