@@ -1,0 +1,14 @@
+window.Settings={
+render(){const s=ContractGuard.settings();return `<div class="heading"><div class="eyebrow">Workspace</div><h1 class="title">Settings</h1></div><div class="two">
+<section class="card page-card"><h3>Appearance</h3><p>Customize the ContractGuard workspace on this device.</p><div class="setting"><div><b>Dark Mode</b><small>Use a darker interface for the workspace.</small></div><button id="darkToggle" class="toggle ${s.darkMode?"on":""}"></button></div><div class="setting"><div><b>Compact navigation</b><small>Keep the navigation layout dense.</small></div><button id="compactToggle" class="toggle ${s.compactMode?"on":""}"></button></div></section>
+<section class="card page-card"><h3>Session & Data</h3><p>Preferences are stored locally in this browser.</p><div class="setting"><div><b>Saved analysis history</b><small>Used by Dashboard and My Contracts.</small></div><span class="badge ok">Local</span></div><div class="setting"><div><b>Clear analysis history</b><small>Remove locally saved contract results.</small></div><button id="clearHistory" class="btn danger">Clear</button></div></section>
+<section class="card page-card wide"><h3>Backend connection</h3><p>When frontend and FastAPI are served together, leave this empty. For a separate public backend, enter its base URL.</p><div class="field"><label class="form-label">API Base URL</label><input id="apiUrl" class="input" placeholder="https://your-api.example.com" value="${ContractGuard.escape(localStorage.getItem("contractGuardApiUrl")||"")}"></div><button id="saveApi" class="btn primary" style="margin-top:11px">Save Connection</button><button id="testApi" class="btn secondary" style="margin:11px 0 0 7px">Test API</button></section>
+</div>`},
+bind(){
+const toggle=(id,key)=>{const el=ContractGuard.$("#"+id);el.onclick=()=>{const s=ContractGuard.settings();s[key]=!s[key];localStorage.setItem(ContractGuard.settingsKey,JSON.stringify(s));ContractGuard.applyTheme();ContractGuard.route()}};
+toggle("darkToggle","darkMode");toggle("compactToggle","compactMode");
+ContractGuard.$("#clearHistory").onclick=()=>{localStorage.removeItem(ContractGuard.KEY);ContractGuard.toast("Analysis history cleared.");ContractGuard.route()};
+ContractGuard.$("#saveApi").onclick=()=>{const v=ContractGuard.$("#apiUrl").value.trim();if(v)localStorage.setItem("contractGuardApiUrl",v);else localStorage.removeItem("contractGuardApiUrl");ContractGuard.toast("API connection saved.")};
+ContractGuard.$("#testApi").onclick=async()=>{try{const r=await fetch(`${getApiBaseUrl()}/api/health`);const d=await r.json();ContractGuard.toast(r.ok?`Backend: ${d.status||"running"}`:"Backend returned an error")}catch(e){ContractGuard.toast("Could not reach the API.")}};
+}
+};

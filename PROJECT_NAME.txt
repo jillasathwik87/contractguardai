@@ -1,0 +1,2 @@
+ContractGuard AI — Reference Design Redesign
+Based on the uploaded contract-complience-agent project and the supplied ContractGuard reference image.

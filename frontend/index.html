@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="api-base" content="">
+  <title>ContractGuard AI — Compliance Workspace</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="shield">CG</div>
+      <div><div class="brand-name">ContractGuard</div><div class="brand-sub">AI Compliance</div></div>
+    </div>
+    <nav class="nav">
+      <a href="#/dashboard" data-route="dashboard"><span>⌂</span>Dashboard</a>
+      <a href="#/contracts" data-route="contracts"><span>▣</span>Contracts</a>
+      <a href="#/my-contracts" data-route="my-contracts"><span>▤</span>My Contracts</a>
+      <a href="#/compliance" data-route="compliance"><span>◇</span>Compliance Rules</a>
+      <a href="#/ask-ai" data-route="ask-ai"><span>✦</span>Ask AI</a>
+      <a href="#/settings" data-route="settings"><span>⚙</span>Settings</a>
+    </nav>
+    <div class="system-status"><i></i><div><b>System Online</b><small>ContractGuard backend</small></div><em>⌁</em></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <div class="top-spacer"></div>
+      <div class="user-box">
+        <div class="avatar">CG</div>
+        <div><b>Contract Manager</b><small>Compliance workspace</small></div>
+        <span>⌄</span>
+      </div>
+    </header>
+    <main id="view"></main>
+    <footer><b>ContractGuard AI</b><span>Contract compliance workspace</span></footer>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="js/config.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/contracts.js"></script>
+<script src="js/compliance.js"></script>
+<script src="js/ask-ai.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/my-contracts.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", ContractGuard.init);
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+window.Dashboard={
+render(){
+ const h=ContractGuard.history(), recent=[...h].reverse().slice(0,4);
+ const passed=h.reduce((n,x)=>n+Number(x.pass||0),0);
+ const issues=h.reduce((n,x)=>n+Number(x.fail||0)+Number(x.missing||0),0);
+ const questions=Number(localStorage.getItem("contractGuardAIQuestions")||0);
+ return `<div class="heading"><div class="eyebrow">Contract Management</div><h1 class="title">Contracts</h1></div>
+ <section class="hero"><div class="hero-left"><div class="hero-icon">▧</div><div><h2>Analyze a contract</h2><p>Upload a PDF contract and ContractGuard AI will analyze its clauses and compliance rules, helping you identify risks and ensure compliance.</p></div></div><div class="hero-points"><div><span>✓</span>AI-Powered Analysis</div><div><span>✓</span>Compliance Validation</div><div><span>✓</span>Actionable Insights</div></div></section>
+ <div class="grid"><div class="stack">
+  <section class="card upload"><div class="card-head"><div class="card-title"><span class="icon">↥</span>Upload Contract</div></div><div class="upload-body"><p class="hint-label">Select a PDF document to begin analysis.</p><div class="dropzone"><div><div class="cloud">☁</div><strong>Drop your PDF here or click to browse</strong><small>PDF files only (max 10MB)</small><button class="btn primary" style="margin-top:10px" onclick="ContractGuard.go('contracts')">Choose PDF</button></div></div><button class="btn primary full" onclick="ContractGuard.go('contracts')">▷ &nbsp; Upload Contract</button><p class="micro">Analysis happens only on the Upload Contract page.</p></div></section>
+  <section class="card recent"><div class="card-head"><div class="card-title"><span class="icon">▤</span>Recent Contracts</div><a class="link" href="#/my-contracts">View all →</a></div>${recent.length?recent.map(x=>Dashboard.row(x)).join(""):`<div class="empty" style="min-height:170px"><div><div class="big">▤</div><b>No contracts analyzed yet</b><p>Upload a contract to start your compliance analysis.</p></div></div>`}</section>
+  <section class="card quick"><div class="card-head"><div class="card-title"><span class="icon">ϟ</span>Quick Actions</div></div><div class="quick-grid"><button onclick="ContractGuard.go('compliance')"><b>◇</b>View Compliance Rules</button><button onclick="ContractGuard.go('ask-ai')"><b>✦</b>Ask AI</button><button onclick="ContractGuard.go('settings')"><b>⚙</b>Go to Settings</button></div></section>
+ </div>
+ <section class="card page-card"><div class="card-title"><span class="icon">▥</span>Workspace Overview</div><div class="stats" style="margin:15px 0 0;grid-template-columns:repeat(3,1fr)"><div class="stat type"><small>Contracts analyzed</small><b>${h.length}</b></div><div class="stat green"><small>Checks passed</small><b>${passed}</b></div><div class="stat red"><small>Issues found</small><b>${issues}</b></div></div>
+ <div style="margin-top:16px;border:1px solid var(--line);border-radius:9px;padding:14px"><div class="card-title">✦ &nbsp;AI workspace</div><p style="font-size:10px;color:var(--muted);line-height:1.6;margin:8px 0">Analyze contracts on the dedicated Upload Contract page, then use Ask AI to ask questions against the selected contract.</p><button class="btn primary" onclick="ContractGuard.go('contracts')">Open Upload Contract</button></div>
+ <div style="margin-top:12px;border:1px solid var(--line);border-radius:9px;padding:14px"><div class="card-title">◉ &nbsp;AI questions</div><p style="font-size:10px;color:var(--muted);margin:8px 0">${questions} question${questions===1?"":"s"} asked in this browser session.</p></div>
+ </section></div>`;
+},
+row(x){let c=Number(x.score||0)>=80?"score":Number(x.score||0)>=60?"score warn":"score bad";return `<div class="recent-row"><span class="pdf">PDF</span><div class="copy"><b>${ContractGuard.escape(x.contract_name||"Unnamed Contract")}</b><small>${ContractGuard.escape(x.contract_type||"Contract")}</small></div><span class="${c}">${Number(x.score||0)}%</span><span class="time">${x.analyzed_at?new Date(x.analyzed_at).toLocaleDateString():"—"}</span></div>`},
+bind(){}
+};

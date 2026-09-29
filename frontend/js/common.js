@@ -1,0 +1,37 @@
+window.ContractGuard=window.ContractGuard||{};
+ContractGuard.KEY="contractGuardAnalysisHistory";
+ContractGuard.settingsKey="contractGuardSettings";
+ContractGuard.$=s=>document.querySelector(s);
+ContractGuard.escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+ContractGuard.toast=function(msg){const t=this.$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)};
+ContractGuard.history=function(){try{return JSON.parse(localStorage.getItem(this.KEY)||"[]")}catch(e){return[]}};
+ContractGuard.saveHistory=function(item){const h=this.history().filter(x=>x.contract_name!==item.contract_name);h.push({...item,analyzed_at:new Date().toISOString()});localStorage.setItem(this.KEY,JSON.stringify(h.slice(-50)))};
+ContractGuard.settings=function(){try{return JSON.parse(localStorage.getItem(this.settingsKey)||"{}")}catch(e){return{}}};
+ContractGuard.applyTheme=function(){const s=this.settings();document.body.classList.toggle("dark",!!s.darkMode)};
+ContractGuard.init=function(){
+  this.applyTheme();
+  const menu=this.$("#menuBtn"); if(menu) menu.onclick=()=>this.$("#sidebar").classList.toggle("open");
+  window.addEventListener("hashchange",()=>this.route());
+  this.route();
+};
+ContractGuard.route=function(){
+  const r=(location.hash.replace(/^#\/?/,"")||"dashboard").split("/")[0];
+  document.querySelectorAll(".nav a").forEach(a=>a.classList.toggle("active",a.dataset.route===r));
+  const view=this.$("#view");
+  if(r==="dashboard") view.innerHTML=Dashboard.render();
+  else if(r==="contracts") view.innerHTML=Contracts.render();
+  else if(r==="my-contracts") view.innerHTML=MyContracts.render();
+  else if(r==="compliance") view.innerHTML=Compliance.render();
+  else if(r==="ask-ai") view.innerHTML=AskAI.render();
+  else if(r==="settings") view.innerHTML=Settings.render();
+  else view.innerHTML=Dashboard.render();
+  document.querySelectorAll(".nav a").forEach(a=>a.onclick=()=>this.$("#sidebar").classList.remove("open"));
+  if(r==="dashboard") Dashboard.bind();
+  if(r==="contracts") Contracts.bind();
+  if(r==="my-contracts") MyContracts.bind();
+  if(r==="compliance") Compliance.bind();
+  if(r==="ask-ai") AskAI.bind();
+  if(r==="settings") Settings.bind();
+  window.scrollTo(0,0);
+};
+ContractGuard.go=r=>location.hash="#/"+r;
